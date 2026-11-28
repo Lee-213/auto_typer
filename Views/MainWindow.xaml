@@ -1,0 +1,489 @@
+<Window x:Class="AutoTyperPro.App.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auto Typer Pro"
+        Width="1120"
+        Height="760"
+        MinWidth="960"
+        MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        Background="{DynamicResource WindowBackgroundBrush}"
+        FontFamily="Segoe UI Variable Text, Microsoft YaHei UI, Segoe UI"
+        FontSize="14"
+        Foreground="{DynamicResource TextPrimaryBrush}">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,0,0,1">
+            <Grid Margin="28,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0"
+                        Width="40"
+                        Height="40"
+                        CornerRadius="10"
+                        Background="{DynamicResource AccentBrush}">
+                    <Path Data="{StaticResource KeyboardIconGeometry}"
+                          Width="24"
+                          Height="24"
+                          Stretch="Uniform"
+                          Stroke="White"
+                          StrokeThickness="1.4"
+                          StrokeStartLineCap="Round"
+                          StrokeEndLineCap="Round"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center" />
+                </Border>
+                <StackPanel Grid.Column="1"
+                            Margin="14,0,0,0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Title}"
+                               FontSize="19"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="自动键盘录入助手"
+                               Margin="12,0,0,0"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Padding="12,6"
+                            CornerRadius="8"
+                            Background="{DynamicResource SuccessSoftBrush}"
+                            Margin="0,0,10,0">
+                        <TextBlock Text="{Binding StateText}"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SuccessBrush}" />
+                    </Border>
+                    <Border Padding="12,6"
+                            CornerRadius="8"
+                            Background="{DynamicResource SurfaceAltBrush}">
+                        <TextBlock Text="{Binding Version}" Foreground="{DynamicResource TextSecondaryBrush}" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      PanningMode="VerticalOnly">
+            <Grid Margin="28,22,28,26">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="344" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource CardBorder}" Padding="20,18">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="170" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="230" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding StateText}"
+                                       FontSize="22"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="倒计时"
+                                       Margin="0,5,0,0"
+                                       Foreground="{DynamicResource TextSecondaryBrush}">
+                                <Run Text="{Binding CountdownDisplay, Mode=OneWay}" />
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="24,0" VerticalAlignment="Center">
+                            <Grid>
+                                <TextBlock Text="{Binding ProgressText}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding VerificationText}"
+                                           HorizontalAlignment="Right"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Grid>
+                            <ProgressBar Style="{StaticResource TaskProgressBar}"
+                                         Minimum="0"
+                                         Maximum="100"
+                                         Value="{Binding ProgressPercent, Mode=OneWay}"
+                                         Margin="0,12,0,0" />
+                            <Grid Margin="0,9,0,0">
+                                <TextBlock Text="已用时"
+                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                    <Run Text="{Binding ElapsedText, Mode=OneWay}" />
+                                </TextBlock>
+                                <TextBlock Text="预计剩余"
+                                           HorizontalAlignment="Right"
+                                           Foreground="{DynamicResource TextSecondaryBrush}">
+                                    <Run Text="{Binding EstimatedRemainingText, Mode=OneWay}" />
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                        <Border Grid.Column="2"
+                                Padding="14,12"
+                                CornerRadius="10"
+                                Background="{DynamicResource WarningSoftBrush}"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="事件提交完成不等于目标内容正确。本阶段不进行目标正文回读。"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource WarningBrush}"
+                                       TextWrapping="Wrap" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,12,0,0"
+                        Padding="12,10"
+                        CornerRadius="8"
+                        Background="{DynamicResource DangerBrush}"
+                        Visibility="{Binding HasActionError, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock Text="{Binding ActionError}"
+                               Foreground="White"
+                               TextWrapping="Wrap" />
+                </Border>
+
+                <Grid Grid.Row="2" Grid.Column="0" Margin="0,16,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Style="{StaticResource CardBorder}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <TextBlock Text="录入文本" Style="{StaticResource SectionTitle}" />
+                                <TextBlock Text="{Binding StatisticsText}"
+                                           HorizontalAlignment="Right"
+                                           FontSize="12"
+                                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                            </Grid>
+                            <TextBlock Text="原文将逐字符发送；不Trim、不折叠空格、不替换剪贴板。"
+                                       Margin="0,5,0,12"
+                                       Style="{StaticResource SecondaryText}" />
+                            <TextBox x:Name="InputTextBox"
+                                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding CanEditText}"
+                                     Style="{StaticResource InputTextBox}"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     TextWrapping="Wrap"
+                                     VerticalScrollBarVisibility="Auto"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     SpellCheck.IsEnabled="False"
+                                     MinHeight="190"
+                                     FontFamily="Cascadia Mono, Consolas, Microsoft YaHei UI"
+                                     FontSize="14" />
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1" Margin="0,12,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0,0,0,8">
+                                <TextBlock Text="任务日志" FontWeight="SemiBold" />
+                                <Button Content="清空面板"
+                                        Command="{Binding ClearLogCommand}"
+                                        HorizontalAlignment="Right"
+                                        Padding="8,3"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Foreground="{DynamicResource AccentBrush}"
+                                        Cursor="Hand" />
+                            </Grid>
+                            <Border Grid.Row="1"
+                                    Style="{StaticResource CardBorder}"
+                                    Padding="16">
+                                <ScrollViewer x:Name="LogScrollViewer"
+                                              Background="Transparent"
+                                              BorderThickness="0"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              PanningMode="VerticalOnly"
+                                              CanContentScroll="False">
+                                    <ItemsControl ItemsSource="{Binding LogEntries}"
+                                                  Foreground="{DynamicResource TextSecondaryBrush}"
+                                                  HorizontalContentAlignment="Stretch"
+                                                  VerticalContentAlignment="Top">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border HorizontalAlignment="Stretch"
+                                                        Background="Transparent"
+                                                        BorderBrush="{DynamicResource BorderBrush}"
+                                                        BorderThickness="0,0,0,1"
+                                                        CornerRadius="4"
+                                                        Padding="8,6"
+                                                        Margin="0,0,0,4">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="64" />
+                                                            <ColumnDefinition Width="32" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="{Binding Timestamp, StringFormat=HH:mm:ss}"
+                                                                   FontFamily="Cascadia Mono, Consolas"
+                                                                   FontSize="11"
+                                                                   LineHeight="16"
+                                                                   VerticalAlignment="Top" />
+                                                        <TextBlock Grid.Column="1"
+                                                                   Text="{Binding Level}"
+                                                                   FontFamily="Cascadia Mono, Consolas"
+                                                                   FontSize="11"
+                                                                   FontWeight="SemiBold"
+                                                                   LineHeight="16"
+                                                                   VerticalAlignment="Top" />
+                                                        <TextBlock Grid.Column="2"
+                                                                   Text="{Binding Message}"
+                                                                   Margin="8,0,0,0"
+                                                                   FontSize="12"
+                                                                   LineHeight="19"
+                                                                   LineStackingStrategy="BlockLineHeight"
+                                                                   TextWrapping="Wrap"
+                                                                   VerticalAlignment="Top" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                </Grid>
+
+                <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,16,0,0">
+                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="目标窗口" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="{Binding TargetTitle}"
+                                       Margin="0,12,0,0"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTip="{Binding TargetTitle}" />
+                            <TextBlock Text="{Binding TargetProcessName}"
+                                       Margin="0,4,0,0"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+                            <Button Content="选择目标窗口"
+                                    Command="{Binding SelectTargetCommand}"
+                                    IsEnabled="{Binding CanSelectTarget}"
+                                    Style="{StaticResource ActionButton}"
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,14,0,0" />
+                            <TextBlock Text="{Binding SelectionMessage}"
+                                       Margin="0,10,0,0"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}" Padding="20" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="输入设置" Style="{StaticResource SectionTitle}" />
+                            <Grid Margin="0,14,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="字符间隔" FontWeight="SemiBold" />
+                                    <TextBlock Text="1–5000 毫秒，默认 30"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </StackPanel>
+                                <TextBox Text="{Binding IntervalMilliseconds, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditText}"
+                                         Style="{StaticResource InputTextBox}"
+                                         Width="82"
+                                         Padding="8,6"
+                                         TextAlignment="Center"
+                                         VerticalContentAlignment="Center"
+                                         HorizontalAlignment="Right" />
+                            </Grid>
+                            <Grid Margin="0,14,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="开始倒计时" FontWeight="SemiBold" />
+                                    <TextBlock Text="0–60 秒，用于切换到目标窗口"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </StackPanel>
+                                <TextBox Text="{Binding CountdownSeconds, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding CanEditText}"
+                                         Style="{StaticResource InputTextBox}"
+                                         Width="82"
+                                         Padding="8,6"
+                                         TextAlignment="Center"
+                                         VerticalContentAlignment="Center"
+                                         HorizontalAlignment="Right" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardBorder}" Padding="20" Margin="0,12,0,0">
+                        <StackPanel>
+                            <TextBlock Text="安全保护" Style="{StaticResource SectionTitle}" />
+                            <TextBlock Text="紧急停止快捷键"
+                                       Margin="0,12,0,0"
+                                       FontWeight="SemiBold" />
+                            <Border Padding="12,10"
+                                    CornerRadius="8"
+                                    Background="{DynamicResource SurfaceAltBrush}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding EmergencyStopShortcutDisplay}"
+                                               FontFamily="Cascadia Mono, Consolas"
+                                               FontSize="15"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding EmergencyStopRegistrationStatus}"
+                                               FontSize="11"
+                                               Foreground="{DynamicResource TextSecondaryBrush}"
+                                               VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+                            <WrapPanel Margin="0,10,0,0">
+                                <Button Content="录制快捷键"
+                                        Command="{Binding RecordEmergencyStopShortcutCommand}"
+                                        IsEnabled="{Binding CanConfigureEmergencyStopShortcut}"
+                                        Style="{StaticResource ActionButton}"
+                                        Margin="0,0,6,6" />
+                                <Button Content="保存并应用"
+                                        Command="{Binding ApplyEmergencyStopShortcutCommand}"
+                                        IsEnabled="{Binding CanApplyEmergencyStopShortcut}"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Margin="0,0,6,6" />
+                                <Button Content="取消"
+                                        Command="{Binding CancelEmergencyStopShortcutCommand}"
+                                        IsEnabled="{Binding CanCancelEmergencyStopShortcut}"
+                                        Style="{StaticResource ActionButton}"
+                                        Margin="0,0,6,6" />
+                                <Button Content="恢复默认 F8"
+                                        Command="{Binding RestoreDefaultEmergencyStopShortcutCommand}"
+                                        IsEnabled="{Binding CanConfigureEmergencyStopShortcut}"
+                                        Style="{StaticResource ActionButton}"
+                                        Margin="0,0,6,6" />
+                            </WrapPanel>
+                            <TextBlock Text="{Binding EmergencyStopShortcutMessage}"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding EmergencyStopStatus}"
+                                       Margin="0,12,0,0"
+                                       FontWeight="SemiBold">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding F8Ready}" Value="False">
+                                                <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text="{Binding EmergencyStopHelpText}"
+                                       Margin="0,6,0,0"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <Border Grid.Row="3"
+                        Grid.ColumnSpan="3"
+                        Style="{StaticResource CardBorder}"
+                        Padding="20,16"
+                        Margin="0,16,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,20,0">
+                            <TextBlock Text="{Binding StatusMessage}"
+                                       FontWeight="SemiBold"
+                                       TextWrapping="Wrap" />
+                            <TextBlock Text="开始前请确认目标窗口、插入点和输入间隔。"
+                                       Margin="0,4,0,0"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextSecondaryBrush}" />
+                        </StackPanel>
+                        <WrapPanel Grid.Column="1" HorizontalAlignment="Right">
+                            <Button Content="开始输入"
+                                    Command="{Binding StartCommand}"
+                                    IsEnabled="{Binding CanStartInput}"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Margin="0,0,8,0" />
+                            <Button Content="暂停"
+                                    Command="{Binding PauseCommand}"
+                                    IsEnabled="{Binding CanPauseInput}"
+                                    Style="{StaticResource ActionButton}"
+                                    Margin="0,0,8,0" />
+                            <Button Content="继续"
+                                    Command="{Binding ResumeCommand}"
+                                    IsEnabled="{Binding CanResumeInput}"
+                                    Style="{StaticResource ActionButton}"
+                                    Margin="0,0,8,0" />
+                            <Button Content="停止"
+                                    Command="{Binding StopCommand}"
+                                    IsEnabled="{Binding CanStopInput}"
+                                    Style="{StaticResource ActionButton}"
+                                    Margin="0,0,8,0" />
+                            <Button Content="{Binding EmergencyStopButtonText}"
+                                    Command="{Binding EmergencyStopCommand}"
+                                    IsEnabled="{Binding CanStopInput}"
+                                    Style="{StaticResource DangerButton}" />
+                        </WrapPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <Border Grid.Row="2"
+                Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="0,1,0,0">
+            <Grid Margin="28,0">
+                <TextBlock Text="阶段三 · 任务控制与目标窗口保护"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+                <TextBlock Text="Windows x64 · SendInput · 不使用剪贴板"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextSecondaryBrush}" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
